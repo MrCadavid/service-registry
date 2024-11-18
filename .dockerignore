@@ -1,0 +1,6 @@
+target/*.jar
+!target/service_registry-0.0.1-SNAPSHOT.jar
+
+*.class
+*.git
+*.idea
