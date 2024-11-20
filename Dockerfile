@@ -1,28 +1,21 @@
+# compilation
+FROM eclipse-temurin:17-jdk-alpine AS builder
 
-FROM maven:3.8.5-openjdk-17 AS build
+
+RUN apk add --no-cache maven
+
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
 
 
-COPY . .
+RUN mvn clean package -DskipTests
 
+FROM eclipse-temurin:17-jdk-alpine
 
-RUN mvn clean package
-
-
-FROM openjdk:17-jdk-slim
 WORKDIR /app
-
-
-COPY --from=build /app/target/service_registry-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/service_registry-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8761
 
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
-
-
-
-
-
-
